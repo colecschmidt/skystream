@@ -1,0 +1,10 @@
+# binaries
+ingestor/ingestor
+
+# Go test cache
+*.test
+*.out
+
+# env files
+.env
+.env.*

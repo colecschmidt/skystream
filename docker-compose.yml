@@ -1,0 +1,24 @@
+services:
+  nats:
+    image: nats:2-alpine
+    command: ["--jetstream", "--store_dir=/data"]
+    ports:
+      - "4222:4222"
+      - "8222:8222" # monitoring
+    volumes:
+      - nats-data:/data
+
+  ingestor:
+    build:
+      context: ./ingestor
+      dockerfile: Dockerfile
+    environment:
+      NATS_URL: nats://nats:4222
+    ports:
+      - "2112:2112" # Prometheus metrics
+    depends_on:
+      - nats
+    restart: unless-stopped
+
+volumes:
+  nats-data:
