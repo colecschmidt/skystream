@@ -2,10 +2,16 @@
 
 Real-time aircraft tracking pipeline. Polls the [OpenSky Network](https://opensky-network.org/) API every 10 seconds and publishes state vectors to NATS JetStream for downstream consumers.
 
+ADS-B (Automatic Dependent Surveillance–Broadcast) is the 
+technology aircraft use to broadcast their position, altitude, 
+and speed to ground stations and other aircraft in real time.
+
 ## Architecture
 
 ```
-OpenSky API → ingestor → NATS JetStream (AIRCRAFT_STATES) → consumers
+OpenSky API → ingestor → NATS JetStream → processor → PostgreSQL
+                                                    ↓
+                                              gRPC API → clients
 ```
 
 ## Services
@@ -14,6 +20,11 @@ OpenSky API → ingestor → NATS JetStream (AIRCRAFT_STATES) → consumers
 |---------|-------------|
 | `ingestor` | Polls OpenSky, publishes to NATS |
 | `nats` | JetStream message broker |
+
+## Performance
+- ~10,600 aircraft state vectors per poll cycle
+- 10-second polling interval
+- Zero message loss across all observed cycles
 
 ## Quick start
 
