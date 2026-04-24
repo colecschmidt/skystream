@@ -65,3 +65,13 @@ docker compose up nats
 cd ingestor
 NATS_URL=nats://localhost:4222 go run .
 ```
+
+## Subscribing to live messages
+
+`subscribe.sh` tails the `aircraft.states.>` subject using a temporary `nats-box` container:
+
+```bash
+./subscribe.sh
+```
+
+You'll see JSON state vectors printed to stdout as each poll cycle publishes them.
